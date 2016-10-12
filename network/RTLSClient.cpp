@@ -592,7 +592,7 @@ void RTLSClient::newData()
                 {
                     processTagRangeReport(k, tid, range[k], lnum, seq); //this is received when tags range to anchors
                     std::stringstream ss;
-                    ss << my_now() <<"c"<< k << "<-" << tid << ":"<<range[k]<<":"<<lnum<<":"<<seq;
+                    ss <<"{time:"<< my_now() <<",type:'c',beacon_id:"<< k << ",tid:" << tid << ",range:"<<range[k]<<",lnum:"<<lnum<<",seq:"<<seq<<"}";
                     ss.precision(20);
                     tcp_.SendMsg((ss.str()));
                 }
@@ -605,7 +605,7 @@ void RTLSClient::newData()
         if(type == 'a') //if 'a' these reports relate to anchor <-> anchor ranges
         {
             int ai = 0, aj = 0;
-            if(_useAutoPos) //if Anchor auto positioning is enabled then process Anchor-Anchor TWR data
+            if(1||_useAutoPos) //if Anchor auto positioning is enabled then process Anchor-Anchor TWR data
             {
                 for(int k=1; k<MAX_NUM_ANCS; k++)
                 {
@@ -631,6 +631,7 @@ void RTLSClient::newData()
                         std::stringstream ss;
                         ss.precision(20);
                         ss << my_now()<<"a"<< ai << "->"<<aj<<":"<<range[k]<<":"<<lnum<<":"<<seq;
+                        ss <<"{time:"<< my_now() <<",type:'a',aid:"<< ai << ",bid:" << aj << ",range:"<<range[k]<<",lnum:"<<lnum<<",seq:"<<seq<<"}";
 
                         tcp_.SendMsg((ss.str()));
                     }
